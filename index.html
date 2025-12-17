@@ -442,8 +442,6 @@
         // 2. REVISED Classification Logic (Standard WHO)
         function getStatus(z, type, labelName = "") {
             if (type === 'bmi' || type === 'wfh') {
-                // If labelName is provided (e.g., "Weight-for-Height" or "BMI-for-Age"), use it.
-                // Otherwise fallback to generic terms if needed.
                 const metric = labelName || (type === 'bmi' ? "BMI-for-Age" : "Weight-for-Height");
 
                 if (z > 3) return { label: "Obese", color: "bg-red-100 text-red-800", note: `Urgent: ${metric} > +3 SD suggests obesity.` };
@@ -619,7 +617,11 @@
         function createResultCard(title, z, type) {
             const status = getStatus(z, type);
             const zFormatted = z > 0 ? `+${z.toFixed(2)}` : z.toFixed(2);
-            // Visual bar scaling: Map -4 to +4 range to 0-100%
+            
+            // Map z from -4 to +4 into 0% to 100%
+            // -4 = 0%
+            // 0 = 50%
+            // +4 = 100%
             const percent = Math.min(Math.max(((z + 4) / 8) * 100, 0), 100);
 
             return `
@@ -633,18 +635,27 @@
                     </span>
                     
                     <div class="mt-4">
-                        <div class="flex justify-between text-xs text-slate-400 mb-1">
-                            <span>-3</span>
-                            <span>0</span>
-                            <span>+3</span>
+                        <!-- Relative container for labels to ensure perfect alignment with ticks -->
+                        <div class="relative h-4 mb-1 text-xs text-slate-400 font-medium">
+                            <span class="absolute left-[12.5%] transform -translate-x-1/2">-3</span>
+                            <span class="absolute left-[25%] transform -translate-x-1/2">-2</span>
+                            <span class="absolute left-[50%] transform -translate-x-1/2">0</span>
+                            <span class="absolute left-[75%] transform -translate-x-1/2">+2</span>
+                            <span class="absolute left-[87.5%] transform -translate-x-1/2">+3</span>
                         </div>
                         <div class="h-2 bg-slate-100 rounded-full overflow-hidden relative">
-                            <div class="absolute top-0 bottom-0 w-0.5 bg-slate-300 left-1/2"></div>
-                            <!-- Markers for -2 and +2 -->
+                            <!-- Center Line (0 SD) -->
+                            <div class="absolute top-0 bottom-0 w-0.5 bg-slate-400 left-1/2 z-10"></div>
+                            
+                            <!-- Tick Marks for -3, -2, +2, +3 -->
+                            <!-- Scale: -4=0%, -3=12.5%, -2=25%, 0=50%, +2=75%, +3=87.5%, +4=100% -->
+                            <div class="absolute top-0 bottom-0 w-px bg-slate-200 left-[12.5%]"></div>
                             <div class="absolute top-0 bottom-0 w-px bg-slate-200 left-[25%]"></div>
                             <div class="absolute top-0 bottom-0 w-px bg-slate-200 left-[75%]"></div>
+                            <div class="absolute top-0 bottom-0 w-px bg-slate-200 left-[87.5%]"></div>
                             
-                            <div class="absolute top-0 bottom-0 w-2 h-2 rounded-full bg-blue-600 -ml-1 border-2 border-white shadow-sm transition-all duration-500" style="left: ${percent}%"></div>
+                            <!-- Indicator Dot -->
+                            <div class="absolute top-0 bottom-0 w-2 h-2 rounded-full bg-blue-600 -ml-1 border-2 border-white shadow-sm transition-all duration-500 z-20" style="left: ${percent}%"></div>
                         </div>
                     </div>
                 </div>
