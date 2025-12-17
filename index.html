@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pediatric Growth & Development Assessment</title>
+    <title>PediaDev</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -30,6 +30,7 @@
             min-height: 46px; /* Touch friendly height */
         }
     </style>
+    <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body class="bg-slate-50 text-slate-800">
 
@@ -130,8 +131,11 @@
                 </div>
             </div>
             
-            <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800 hidden" id="anthroNotes">
-                <strong>Note:</strong> <span id="heightNote"></span>
+            <div id="dynamicNotesContainer" class="space-y-3 mt-6">
+                <!-- Dynamic notes will be injected here -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800 hidden" id="anthroNotes">
+                    <strong>Note:</strong> <span id="heightNote"></span>
+                </div>
             </div>
         </div>
 
@@ -332,283 +336,76 @@
         // CDC/AAP 2022 Milestones - FULL LIST
         const MILESTONES = {
             2: {
-                Social: [
-                    "Calms down when spoken to or picked up", 
-                    "Looks at your face", 
-                    "Seems happy to see you when you walk up to her",
-                    "Smiles when you talk to or smile at her"
-                ],
-                Language: [
-                    "Makes sounds other than crying", 
-                    "Reacts to loud sounds"
-                ],
-                Cognitive: [
-                    "Watches you as you move", 
-                    "Looks at a toy for several seconds"
-                ],
-                Motor: [
-                    "Holds head up when on tummy", 
-                    "Moves both arms and both legs", 
-                    "Opens hands briefly"
-                ]
+                Social: ["Calms down when spoken to or picked up", "Looks at your face", "Seems happy to see you", "Smiles when you talk to or smile at her"],
+                Language: ["Makes sounds other than crying", "Reacts to loud sounds"],
+                Cognitive: ["Watches you as you move", "Looks at a toy for several seconds"],
+                Motor: ["Holds head up when on tummy", "Moves both arms and both legs", "Opens hands briefly"]
             },
             4: {
-                Social: [
-                    "Smiles on his own to get your attention", 
-                    "Chuckles (not yet a full laugh) when you try to make her laugh", 
-                    "Looks at you, moves, or makes sounds to get or keep your attention"
-                ],
-                Language: [
-                    "Makes sounds like 'oooo' and 'aahh' (cooing)", 
-                    "Makes sounds back when you talk to him", 
-                    "Turns head toward the sound of your voice"
-                ],
-                Cognitive: [
-                    "If hungry, opens mouth when she sees breast or bottle", 
-                    "Looks at his hands with interest"
-                ],
-                Motor: [
-                    "Holds head steady without support when you are holding her", 
-                    "Holds a toy when you put it in his hand", 
-                    "Uses her arm to swing at toys", 
-                    "Brings hands to mouth",
-                    "Pushes up onto elbows/forearms when on tummy"
-                ]
+                Social: ["Smiles on his own to get your attention", "Chuckles (not yet a full laugh)", "Looks at you, moves, or makes sounds to get attention"],
+                Language: ["Makes sounds like 'oooo', 'aahh' (cooing)", "Makes sounds back when you talk to him", "Turns head towards your voice"],
+                Cognitive: ["If hungry, opens mouth when she sees breast/bottle", "Looks at hands with interest"],
+                Motor: ["Holds head steady without support", "Holds a toy when you put it in hand", "Uses arm to swing at toys", "Brings hands to mouth", "Pushes up onto elbows/forearms"]
             },
             6: {
-                Social: [
-                    "Knows familiar people", 
-                    "Likes to look at himself in the mirror", 
-                    "Laughs"
-                ],
-                Language: [
-                    "Takes turns making sounds with you", 
-                    "Blows 'raspberries' (sticks tongue out and blows)", 
-                    "Makes squealing noises"
-                ],
-                Cognitive: [
-                    "Puts things in her mouth to explore them", 
-                    "Reaches to grab a toy he wants", 
-                    "Closes lips to show she does not want more food"
-                ],
-                Motor: [
-                    "Rolls from tummy to back", 
-                    "Pushes up with straight arms when on tummy", 
-                    "Leans on hands to support himself when sitting"
-                ]
+                Social: ["Knows familiar people", "Likes to look at self in mirror", "Laughs"],
+                Language: ["Takes turns making sounds", "Blows 'raspberries'", "Makes squealing noises"],
+                Cognitive: ["Puts things in mouth to explore", "Reaches to grab a toy", "Closes lips to show they don't want more food"],
+                Motor: ["Rolls from tummy to back", "Pushes up with straight arms on tummy", "Leans on hands to support self when sitting"]
             },
             9: {
-                Social: [
-                    "Is shy, clingy, or fearful around strangers", 
-                    "Shows several facial expressions (happy, sad, angry, surprised)", 
-                    "Looks when you call his name",
-                    "Reacts when you leave (looks, reaches for you, or cries)",
-                    "Smiles or laughs when you play peek-a-boo"
-                ],
-                Language: [
-                    "Makes different sounds like 'mamamama' and 'babababa'", 
-                    "Lifts arms up to be picked up"
-                ],
-                Cognitive: [
-                    "Looks for objects when dropped out of sight (like his spoon or toy)", 
-                    "Bangs two things together"
-                ],
-                Motor: [
-                    "Gets to a sitting position by herself", 
-                    "Moves things from one hand to her other hand", 
-                    "Uses fingers to 'rake' food toward himself", 
-                    "Sits without support"
-                ]
+                Social: ["Is shy, clingy, or fearful around strangers", "Shows several facial expressions (happy, sad, angry)", "Looks when you call their name", "Reacts when you leave", "Smiles/laughs at peek-a-boo"],
+                Language: ["Makes different sounds like 'mamamama' and 'babababa'", "Lifts arms up to be picked up"],
+                Cognitive: ["Looks for objects when dropped out of sight", "Bangs two things together"],
+                Motor: ["Gets to sitting position", "Moves things from one hand to other", "Uses fingers to 'rake' food", "Sits without support"]
             },
             12: {
-                Social: [
-                    "Plays games with you, like pat-a-cake"
-                ],
-                Language: [
-                    "Waves 'bye-bye'", 
-                    "Calls a parent 'mama' or 'dada' or another special name", 
-                    "Understands 'no' (pauses briefly or stops when you say it)"
-                ],
-                Cognitive: [
-                    "Puts something in a container, like a block in a cup", 
-                    "Looks for things he sees you hide, like a toy under a blanket"
-                ],
-                Motor: [
-                    "Pulls up to stand", 
-                    "Walks, holding onto furniture", 
-                    "Drinks from a cup without a lid, as you hold it", 
-                    "Picks things up between thumb and pointer finger, like small bits of food"
-                ]
+                Social: ["Plays games like 'pat-a-cake'"],
+                Language: ["Waves 'bye-bye'", "Calls a parent 'mama' or 'dada'", "Understands 'no' (pauses/stops)"],
+                Cognitive: ["Puts something in a container", "Looks for things you hide"],
+                Motor: ["Pulls up to stand", "Walks holding furniture", "Drinks from cup without lid (held by adult)", "Picks things up with thumb and pointer finger"]
             },
             15: {
-                Social: [
-                    "Copies other children while playing (taking toys out of container)", 
-                    "Shows you an object that he likes", 
-                    "Claps when excited", 
-                    "Hugs stuffed doll or other toy",
-                    "Shows you affection (hugs, cuddles, or kisses you)"
-                ],
-                Language: [
-                    "Tries to say 1 or 2 words besides mama or dada", 
-                    "Looks at a familiar object when you name it", 
-                    "Follows directions given with both a gesture and words",
-                    "Points to ask for something or to get help"
-                ],
-                Cognitive: [
-                    "Tries to use things the right way, like a phone, cup, or book", 
-                    "Stacks at least 2 small objects, like blocks"
-                ],
-                Motor: [
-                    "Takes a few steps on his own", 
-                    "Uses fingers to feed herself some food"
-                ]
+                Social: ["Copies other children while playing", "Shows you an object they like", "Claps when excited", "Hugs stuffed doll/toy", "Shows affection"],
+                Language: ["Tries to say 1-2 words besides mama/dada", "Looks at familiar object when named", "Follows directions given with gesture", "Points to ask for something"],
+                Cognitive: ["Tries to use things the right way (phone, cup)", "Stacks at least 2 small objects"],
+                Motor: ["Takes a few steps on own", "Uses fingers to feed self"]
             },
             18: {
-                Social: [
-                    "Moves away from you, but looks to make sure you are close by", 
-                    "Points to show you something interesting", 
-                    "Puts hands out for you to wash them",
-                    "Looks at a few pages in a book with you",
-                    "Helps you dress him by pushing arm through sleeve or lifting up foot"
-                ],
-                Language: [
-                    "Tries to say 3 or more words besides mama or dada", 
-                    "Follows 1-step directions without any gestures"
-                ],
-                Cognitive: [
-                    "Copies you doing chores, like sweeping with a broom", 
-                    "Plays with toys in a simple way, like pushing a toy car"
-                ],
-                Motor: [
-                    "Walks without holding onto anyone or anything", 
-                    "Scribbles", 
-                    "Drinks from a cup without a lid and may spill sometimes", 
-                    "Feeds herself with her fingers", 
-                    "Tries to use a spoon",
-                    "Climbs on and off a couch or chair without help"
-                ]
+                Social: ["Moves away from you but looks to make sure you are close", "Points to show you something interesting", "Puts hands out for wash", "Looks at book with you", "Helps dress"],
+                Language: ["Tries to say 3 or more words besides mama/dada", "Follows 1-step directions without gestures"],
+                Cognitive: ["Copies you doing chores", "Plays with toys in simple way (pushing car)"],
+                Motor: ["Walks without holding on", "Scribbles", "Drinks from cup without lid (may spill)", "Climbs on/off couch", "Tries to use spoon", "Feeds self with fingers"]
             },
             24: {
-                Social: [
-                    "Notices when others are hurt or upset (pausing/sad face)", 
-                    "Looks at your face to see how to react in a new situation"
-                ],
-                Language: [
-                    "Points to things in a book when you ask 'Where is the...?'", 
-                    "Says at least 2 words together (e.g., 'More milk')", 
-                    "Points to at least 2 body parts when asked", 
-                    "Uses more gestures than just waving and pointing (blowing kiss, nodding yes)"
-                ],
-                Cognitive: [
-                    "Holds something in one hand while using the other hand", 
-                    "Tries to use switches, knobs, or buttons on a toy", 
-                    "Plays with more than 1 toy at the same time"
-                ],
-                Motor: [
-                    "Kicks a ball", 
-                    "Runs", 
-                    "Walks (not climbs) up a few stairs with or without help", 
-                    "Eats with a spoon"
-                ]
+                Social: ["Notices when others are hurt/upset", "Looks at your face to see reaction in new situation"],
+                Language: ["Points to things in book when asked", "Says at least 2 words together", "Points to at least 2 body parts", "Uses more gestures (blowing kiss, nodding yes)"],
+                Cognitive: ["Holds something in one hand while using other", "Tries to use switches/knobs", "Plays with more than 1 toy at same time"],
+                Motor: ["Kicks a ball", "Runs", "Walks up few stairs", "Eats with spoon"]
             },
             30: {
-                Social: [
-                    "Plays next to other children and sometimes plays with them", 
-                    "Shows you what she can do by saying, 'Look at me!'", 
-                    "Follows simple routines when told (e.g., 'It's clean-up time')"
-                ],
-                Language: [
-                    "Says about 50 words", 
-                    "Says 2 or more words, with 1 action word (e.g., 'Doggie run')", 
-                    "Names things in a book when you point and ask, 'What is this?'", 
-                    "Says words like I, me, or we"
-                ],
-                Cognitive: [
-                    "Uses things to pretend (e.g., feeding block to doll)", 
-                    "Shows simple problem-solving skills (e.g., standing on stool to reach)", 
-                    "Follows 2-step instructions (e.g., 'Put toy down and close door')", 
-                    "Shows that he knows at least 1 color"
-                ],
-                Motor: [
-                    "Uses hands to twist things (doorknobs, lids)", 
-                    "Takes some clothes off by himself (loose pants, open jacket)", 
-                    "Jumps off the ground with both feet", 
-                    "Turns book pages, 1 at a time, when you read to her"
-                ]
+                Social: ["Plays next to other children", "Shows you what they can do ('Look at me!')", "Follows simple routines"],
+                Language: ["Says ~50 words", "Says 2+ words with action word", "Names things in book", "Uses I, me, we"],
+                Cognitive: ["Uses things to pretend", "Shows simple problem solving", "Follows 2-step instructions", "Knows at least 1 color"],
+                Motor: ["Uses hands to twist (lids, knobs)", "Takes some clothes off", "Jumps off ground with both feet", "Turns book pages 1 at a time"]
             },
             36: {
-                Social: [
-                    "Calms down within 10 min after you leave her", 
-                    "Notices other children and joins them to play"
-                ],
-                Language: [
-                    "Talks with you in conversation using at least 2 back-and-forth exchanges", 
-                    "Asks who, what, where, or why questions", 
-                    "Says what action is happening in a picture when asked", 
-                    "Says first name when asked",
-                    "Talks well enough for others to understand, most of the time"
-                ],
-                Cognitive: [
-                    "Draws a circle when you show him how", 
-                    "Avoids touching hot objects when you warn her"
-                ],
-                Motor: [
-                    "Strings items together (beads, macaroni)", 
-                    "Puts on some clothes by himself (loose pants, jacket)", 
-                    "Uses a fork"
-                ]
+                Social: ["Calms down within 10 min after you leave", "Notices other children and joins to play"],
+                Language: ["Talks with you in conversation", "Asks 'who/what/where/why'", "Says action in picture", "Says first name when asked", "Talks well enough for others to understand"],
+                Cognitive: ["Draws a circle", "Avoids touching hot objects"],
+                Motor: ["Strings items together", "Puts on some clothes by self", "Uses a fork"]
             },
             48: {
-                Social: [
-                    "Pretends to be something else during play (teacher, superhero)", 
-                    "Asks to go play with children if none are around", 
-                    "Comforts others who are hurt or sad",
-                    "Avoids danger (e.g., not jumping from tall heights)",
-                    "Likes to be a 'helper'",
-                    "Changes behavior based on where she is (library vs playground)"
-                ],
-                Language: [
-                    "Says sentences with 4 or more words", 
-                    "Says some words from a song, story, or nursery rhyme", 
-                    "Talks about at least 1 thing that happened during his day",
-                    "Answers simple questions like 'What is a coat for?'"
-                ],
-                Cognitive: [
-                    "Names a few colors of items", 
-                    "Tells what comes next in a well-known story", 
-                    "Draws a person with 3 or more body parts"
-                ],
-                Motor: [
-                    "Catches a large ball most of the time", 
-                    "Serves himself food or pours water, with adult supervision", 
-                    "Unbuttons some buttons", 
-                    "Holds crayon or pencil between fingers and thumb (not in a fist)"
-                ]
+                Social: ["Pretends to be something else during play", "Asks to go play with children", "Comforts others who are hurt", "Avoids danger", "Likes to be helper", "Changes behavior by place"],
+                Language: ["Says sentences with 4 or more words", "Says some words from song/story", "Talks about day", "Answers simple questions"],
+                Cognitive: ["Names a few colors", "Tells what comes next in story", "Draws person with 3+ body parts"],
+                Motor: ["Catches large ball", "Serves self food/water", "Unbuttons some buttons", "Holds crayon with fingers (not fist)"]
             },
             60: {
-                Social: [
-                    "Follows rules or takes turns when playing games with other children", 
-                    "Sings, dances, or acts for you", 
-                    "Does simple chores at home (matching socks, clearing table)"
-                ],
-                Language: [
-                    "Tells a story she heard or made up with at least 2 events", 
-                    "Answers simple questions about a book or story after you read it", 
-                    "Keeps a conversation going with more than 3 back-and-forth exchanges", 
-                    "Uses or recognizes simple rhymes (bat-cat, ball-tall)"
-                ],
-                Cognitive: [
-                    "Counts to 10", 
-                    "Names some numbers between 1 and 5 when you point to them", 
-                    "Uses words about time (yesterday, tomorrow, morning)", 
-                    "Pays attention for 5 to 10 minutes during activities", 
-                    "Writes some letters in her name",
-                    "Names some letters when you point to them"
-                ],
-                Motor: [
-                    "Buttons some buttons", 
-                    "Hops on 1 foot"
-                ]
+                Social: ["Follows rules/takes turns", "Sings/dances/acts", "Does simple chores"],
+                Language: ["Tells story with 2+ events", "Answers simple questions about story", "Keeps conversation going", "Uses/recognizes simple rhymes"],
+                Cognitive: ["Counts to 10", "Names some numbers", "Uses words about time", "Pays attention 5-10m", "Writes some letters in name", "Names some letters"],
+                Motor: ["Buttons some buttons", "Hops on 1 foot"]
             }
         };
 
@@ -642,23 +439,30 @@
             return (Math.pow(value / M, L) - 1) / (L * S);
         }
 
-        // 2. Classification Logic
-        function getStatus(z, type) {
+        // 2. REVISED Classification Logic (Standard WHO)
+        function getStatus(z, type, labelName = "") {
             if (type === 'bmi' || type === 'wfh') {
-                if (z > 3) return { label: "Obese", color: "bg-red-100 text-red-800" };
-                if (z > 2) return { label: "Overweight", color: "bg-orange-100 text-orange-800" };
-                if (z > 1) return { label: "Risk of Overweight", color: "bg-yellow-100 text-yellow-800" };
-                if (z < -3) return { label: "Severely Wasted", color: "bg-red-100 text-red-800" };
-                if (z < -2) return { label: "Wasted", color: "bg-orange-100 text-orange-800" };
-                return { label: "Normal", color: "bg-green-100 text-green-800" };
+                // If labelName is provided (e.g., "Weight-for-Height" or "BMI-for-Age"), use it.
+                // Otherwise fallback to generic terms if needed.
+                const metric = labelName || (type === 'bmi' ? "BMI-for-Age" : "Weight-for-Height");
+
+                if (z > 3) return { label: "Obese", color: "bg-red-100 text-red-800", note: `Urgent: ${metric} > +3 SD suggests obesity.` };
+                if (z > 2) return { label: "Overweight", color: "bg-orange-100 text-orange-800", note: `Monitor: ${metric} > +2 SD suggests overweight.` };
+                if (z > 1) return { label: "Risk of Overweight", color: "bg-yellow-100 text-yellow-800", note: `Risk: ${metric} > +1 SD indicates possible risk of overweight.` };
+                if (z < -3) return { label: "Severely Wasted", color: "bg-red-100 text-red-800", note: `Urgent: ${metric} < -3 SD. Severe acute malnutrition requires immediate attention.` };
+                if (z < -2) return { label: "Wasted", color: "bg-orange-100 text-orange-800", note: `Warning: ${metric} < -2 SD. Moderate acute malnutrition.` };
+                return { label: "Normal", color: "bg-green-100 text-green-800", note: "" };
             } else if (type === 'haz') {
-                if (z < -3) return { label: "Severely Stunted", color: "bg-red-100 text-red-800" };
-                if (z < -2) return { label: "Stunted", color: "bg-orange-100 text-orange-800" };
-                return { label: "Normal", color: "bg-green-100 text-green-800" };
+                const metric = labelName || "Height-for-Age";
+                if (z > 3) return { label: "Tall", color: "bg-blue-100 text-blue-800", note: `Note: ${metric} > +3 SD. Consider endocrine causes if disproportionate.` };
+                if (z < -3) return { label: "Severely Stunted", color: "bg-red-100 text-red-800", note: `Urgent: ${metric} < -3 SD. Severe chronic malnutrition.` };
+                if (z < -2) return { label: "Stunted", color: "bg-orange-100 text-orange-800", note: `Warning: ${metric} < -2 SD. Chronic malnutrition.` };
+                return { label: "Normal", color: "bg-green-100 text-green-800", note: "" };
             } else if (type === 'waz') {
-                if (z < -3) return { label: "Severely Underweight", color: "bg-red-100 text-red-800" };
-                if (z < -2) return { label: "Underweight", color: "bg-orange-100 text-orange-800" };
-                return { label: "Normal", color: "bg-green-100 text-green-800" };
+                if (z > 1) return { label: "Overweight (Assess BMI)", color: "bg-yellow-100 text-yellow-800", note: "Weight-for-Age > +1 SD. Assess BMI or Weight-for-Length/Height for better classification." };
+                if (z < -3) return { label: "Severely Underweight", color: "bg-red-100 text-red-800", note: "Urgent: Weight-for-Age < -3 SD." };
+                if (z < -2) return { label: "Underweight", color: "bg-orange-100 text-orange-800", note: "Warning: Weight-for-Age < -2 SD." };
+                return { label: "Normal", color: "bg-green-100 text-green-800", note: "" };
             }
         }
 
@@ -685,12 +489,10 @@
             
             if (!dob || isNaN(dob.getTime()) || !sex) return;
             
-            // Set visit date default if empty
             if (!document.getElementById('visitDate').value) {
                 document.getElementById('visitDate').valueAsDate = new Date();
             }
 
-            // Calc Age
             const diffTime = Math.abs(visit - dob);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
             const ageMonths = diffDays / 30.4375;
@@ -703,7 +505,6 @@
             const ageContainer = document.getElementById('ageDisplay');
             ageContainer.classList.remove('hidden');
             
-            // New Flexible Layout for Age
             ageContainer.innerHTML = `
                 <div class="flex flex-col sm:flex-row sm:items-baseline gap-1">
                     <span class="font-bold text-blue-900">Age: ${yearsDisplay} years, ${monthsDisplay} months, ${daysDisplay} days</span>
@@ -714,23 +515,29 @@
             // --- 1. ANTHROPOMETRY ---
             if (weight && height) {
                 let resultsHTML = '';
+                const notes = [];
                 
-                // Determine tables based on sex
                 const wfa_table = sex === 'male' ? WHO_DATA.wfa_boys : WHO_DATA.wfa_girls;
                 
-                // Height adjustment rule (<2 years measured standing -> add 0.7, >2 years measured lying -> subtract 0.7)
-                let note = "";
+                // --- DETERMINING LENGTH VS HEIGHT LABEL ---
+                let lengthTerm = "Height";
+                let lengthTermFull = "Height-for-Age";
+                let wfhTerm = "Weight-for-Height";
                 
+                let heightNote = "";
                 if (ageMonths < 24) {
-                    note = "Using WHO Length-for-age standards (0-2 years). Ensure child was measured recumbent.";
+                    lengthTerm = "Length";
+                    lengthTermFull = "Length-for-Age";
+                    wfhTerm = "Weight-for-Length";
+                    heightNote = "Using WHO Length-for-age (0-2y). Ensure child was measured recumbent.";
                 } else {
-                    note = "Using WHO Height-for-age standards (2-19 years). Ensure child was measured standing.";
+                    // Defaults set above for > 24 months
+                    heightNote = "Using WHO Height-for-age (2-19y). Ensure child was measured standing.";
                 }
-                document.getElementById('anthroNotes').classList.remove('hidden');
-                document.getElementById('heightNote').textContent = note;
+                notes.push({ type: 'info', text: heightNote });
 
                 // HAZ
-                let haz_table, haz_val;
+                let haz_table;
                 if (ageMonths < 24) {
                     haz_table = sex === 'male' ? WHO_DATA.lhfa_boys_0_2 : WHO_DATA.lhfa_girls_0_2;
                 } else {
@@ -738,16 +545,21 @@
                 }
                 const [l_h, m_h, s_h] = getLMS(haz_table, ageMonths);
                 const haz = calculateZScore(height, l_h, m_h, s_h);
-                resultsHTML += createResultCard("Length/Height-for-Age", haz, "haz");
+                // Pass dynamic label
+                const hazStatus = getStatus(haz, "haz", lengthTermFull);
+                if (hazStatus.note) notes.push({ type: haz < -2 ? 'alert' : 'info', text: hazStatus.note });
+                resultsHTML += createResultCard(lengthTermFull, haz, "haz");
 
-                // WAZ (0-10 years only)
+                // WAZ (0-10 y)
                 if (ageYears <= 10) {
                     const [l_w, m_w, s_w] = getLMS(wfa_table, ageMonths);
                     const waz = calculateZScore(weight, l_w, m_w, s_w);
+                    const wazStatus = getStatus(waz, "waz");
+                    if (wazStatus.note) notes.push({ type: waz < -2 ? 'alert' : 'info', text: wazStatus.note });
                     resultsHTML += createResultCard("Weight-for-Age", waz, "waz");
                 }
 
-                // WHZ (0-5 years)
+                // WHZ (0-5 y)
                 if (ageYears <= 5) {
                     let whz_table;
                     if (ageMonths < 24) {
@@ -757,21 +569,44 @@
                     }
                     const [l_wh, m_wh, s_wh] = getLMS(whz_table, height);
                     const whz = calculateZScore(weight, l_wh, m_wh, s_wh);
-                    resultsHTML += createResultCard("Weight-for-Length/Height", whz, "wfh");
+                    // Pass dynamic label
+                    const whzStatus = getStatus(whz, "wfh", wfhTerm);
+                    if (whzStatus.note) notes.push({ type: whz < -2 || whz > 2 ? 'alert' : 'info', text: whzStatus.note });
+                    resultsHTML += createResultCard(wfhTerm, whz, "wfh");
                 }
 
-                // BMI (2-19 years)
+                // BMI (2-19 y)
                 if (ageYears >= 2 && ageYears <= 19) {
                     const bmi = weight / ((height/100) * (height/100));
                     const bmi_table = sex === 'male' ? WHO_DATA.bmi_boys : WHO_DATA.bmi_girls;
                     const [l_b, m_b, s_b] = getLMS(bmi_table, ageMonths);
                     const baz = calculateZScore(bmi, l_b, m_b, s_b);
+                    const bmiStatus = getStatus(baz, "bmi", "BMI-for-Age");
+                    if (bmiStatus.note) notes.push({ type: baz < -2 || baz > 1 ? 'alert' : 'info', text: bmiStatus.note });
                     resultsHTML += createResultCard(`BMI-for-Age (${bmi.toFixed(1)})`, baz, "bmi");
                 } else if (ageYears < 2) {
                      resultsHTML += `<div class="stat-card bg-white p-6 rounded-xl border border-slate-200 shadow-sm opacity-50"><h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">BMI-for-Age</h4><p class="text-sm">Not applicable < 2 years</p></div>`;
                 }
 
                 document.getElementById('resultsGrid').innerHTML = resultsHTML;
+                
+                // Render Dynamic Notes
+                const notesContainer = document.getElementById('dynamicNotesContainer');
+                notesContainer.innerHTML = '';
+                notes.forEach(note => {
+                    const colorClass = note.type === 'alert' 
+                        ? 'bg-red-50 border-red-200 text-red-800' 
+                        : 'bg-yellow-50 border-yellow-200 text-yellow-800';
+                    
+                    notesContainer.innerHTML += `
+                        <div class="${colorClass} border rounded-lg p-3 text-sm flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>${note.text}</span>
+                        </div>
+                    `;
+                });
             }
 
             // --- 2. IMMUNIZATIONS ---
@@ -784,6 +619,7 @@
         function createResultCard(title, z, type) {
             const status = getStatus(z, type);
             const zFormatted = z > 0 ? `+${z.toFixed(2)}` : z.toFixed(2);
+            // Visual bar scaling: Map -4 to +4 range to 0-100%
             const percent = Math.min(Math.max(((z + 4) / 8) * 100, 0), 100);
 
             return `
@@ -804,7 +640,11 @@
                         </div>
                         <div class="h-2 bg-slate-100 rounded-full overflow-hidden relative">
                             <div class="absolute top-0 bottom-0 w-0.5 bg-slate-300 left-1/2"></div>
-                            <div class="absolute top-0 bottom-0 w-2 h-2 rounded-full bg-blue-600 -ml-1 border-2 border-white shadow-sm" style="left: ${percent}%"></div>
+                            <!-- Markers for -2 and +2 -->
+                            <div class="absolute top-0 bottom-0 w-px bg-slate-200 left-[25%]"></div>
+                            <div class="absolute top-0 bottom-0 w-px bg-slate-200 left-[75%]"></div>
+                            
+                            <div class="absolute top-0 bottom-0 w-2 h-2 rounded-full bg-blue-600 -ml-1 border-2 border-white shadow-sm transition-all duration-500" style="left: ${percent}%"></div>
                         </div>
                     </div>
                 </div>
@@ -813,7 +653,7 @@
 
         function renderImmunizations(ageMonths) {
             const container = document.getElementById('immunizationContainer');
-            // Clean up old rows. We select children after the first one (header).
+            // Keep header (first child), remove rest
             while (container.children.length > 1) {
                 container.removeChild(container.lastChild);
             }
@@ -829,7 +669,6 @@
                     </div>
                 `;
                 
-                // Add Group Header to a temp container string
                 let rowsHtml = "";
 
                 // Rows
@@ -858,12 +697,12 @@
 
                     rowsHtml += `
                     <div class="p-4 sm:px-6 hover:bg-slate-50 transition-colors grid grid-cols-1 md:grid-cols-12 gap-y-2 md:gap-x-4 items-start md:items-center border-b border-slate-100 last:border-0">
-                        <!-- Vaccine Name (Mobile: Full width, Desktop: 4 cols) -->
+                        <!-- Vaccine Name -->
                         <div class="md:col-span-4 font-medium text-slate-900 text-sm">
                             ${vac.name}
                         </div>
 
-                        <!-- Wrapper for Details -->
+                        <!-- Wrapper using contents for alignment -->
                         <div class="col-span-1 md:contents grid grid-cols-2 gap-y-1 w-full items-center">
                             
                             <!-- Dose -->
@@ -889,7 +728,6 @@
                     `;
                 });
                 
-                // Append to container
                 const groupDiv = document.createElement('div');
                 groupDiv.innerHTML = groupHtml + rowsHtml;
                 container.appendChild(groupDiv);
@@ -900,16 +738,11 @@
             const container = document.getElementById('milestoneGrid');
             const ageLabel = document.getElementById('milestoneAgeGroup');
             container.innerHTML = '';
-            
-            // Set vertical stack layout
             container.className = 'space-y-12';
 
-            const milestoneAges = Object.keys(MILESTONES).map(Number).sort((a,b) => b-a); // Sort descending (current to past)
+            const milestoneAges = Object.keys(MILESTONES).map(Number).sort((a,b) => b-a);
             let currentAgeGroup = 0;
-            let applicableAges = [];
-
-            // 1. Determine current developmental age bracket
-            // Sort ascending for calculation
+            
             const ascendingAges = [...milestoneAges].sort((a,b) => a-b);
             for (let age of ascendingAges) {
                 if (ageMonths >= age) {
@@ -924,10 +757,7 @@
                 return;
             }
 
-            // 2. Filter milestones to show history (current age down to birth)
-            applicableAges = milestoneAges.filter(age => age <= currentAgeGroup);
-
-            // Update Label
+            const applicableAges = milestoneAges.filter(age => age <= currentAgeGroup);
             ageLabel.textContent = `${applicableAges[applicableAges.length-1]} - ${currentAgeGroup} Months`;
 
             const domains = {
@@ -937,18 +767,14 @@
                 'Motor': 'bg-green-50 text-green-700 border-green-200'
             };
 
-            // 3. Render loop
             applicableAges.forEach(age => {
                 const data = MILESTONES[age];
-                
-                // Header for this age group
                 let sectionHtml = `
                     <div class="border-t border-slate-100 pt-8 first:border-0 first:pt-0">
                         <h4 class="text-xl font-bold text-slate-800 mb-4 px-1">${age} Month Checklist</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 `;
 
-                // Cards for this age group
                 for (const [domain, items] of Object.entries(data)) {
                     let itemsHtml = items.map(item => `
                         <li class="flex items-start mb-2 group cursor-pointer hover:bg-white/50 p-1 rounded transition-colors select-none">
@@ -968,8 +794,7 @@
                         </div>
                     `;
                 }
-
-                sectionHtml += `</div></div>`; // Close grid and section wrapper
+                sectionHtml += `</div></div>`;
                 container.innerHTML += sectionHtml;
             });
         }
