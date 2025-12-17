@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PediaDev</title>
+    <title>Pediatric Growth & Development Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -29,7 +29,7 @@
                     <svg class="h-8 w-8 text-blue-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h1 class="text-xl font-bold text-slate-900">PediaDev <span class="text-sm font-normal text-slate-500 ml-2">Growth & Development Tool</span></h1>
+                    <h1 class="text-xl font-bold text-slate-900">PediaAssess <span class="text-sm font-normal text-slate-500 ml-2">Growth & Development Tool</span></h1>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
 
     <footer class="bg-white border-t border-slate-200 mt-12 py-8">
         <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
-            <p>Pediatric Growth & Development Tool. A clinical aid, not a medical device.</p>
+            <p>Clinical Growth & Development Tool. For professional use as a reference aid.</p>
             <p class="mt-2 text-xs">Sources: WHO Child Growth Standards, PIDSP 2026 Immunization Schedule, CDC/AAP 2022 Milestones.</p>
         </div>
     </footer>
